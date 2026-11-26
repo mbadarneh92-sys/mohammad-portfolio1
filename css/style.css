@@ -1,0 +1,19 @@
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#FAF9F6;
+}
+
+.hero{
+    height:100vh;
+    background:#262626;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:60px;
+}
