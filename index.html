@@ -14,6 +14,218 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+<style>
+  /* V3 Enhancements: Filter Bar, Project Media & Interactive Lightbox */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .filter-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(128, 128, 128, 0.35);
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: #111827;
+    color: #ffffff;
+    border-color: #111827;
+  }
+
+  .card {
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+  }
+
+  .card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    background: rgba(128, 128, 128, 0.12);
+  }
+
+  .card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+
+  .photo-count-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #ffffff;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .card-meta {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.65;
+    margin-bottom: 4px;
+  }
+
+  /* Lightbox Modal */
+  .lightbox-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.88);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .lightbox-modal.open {
+    display: flex;
+  }
+
+  .lightbox-content {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    background: #141414;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  }
+
+  .lightbox-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .lightbox-title {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .lightbox-subtitle {
+    margin: 2px 0 0;
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+
+  .lightbox-close {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .lightbox-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b0b0b;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 280px;
+    max-height: 62vh;
+  }
+
+  .lightbox-stage img {
+    max-width: 100%;
+    max-height: 62vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.65);
+    color: #ffffff;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  .lightbox-prev {
+    left: 12px;
+  }
+
+  .lightbox-next {
+    right: 12px;
+  }
+
+  .lightbox-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-top: 14px;
+    padding-bottom: 4px;
+  }
+
+  .lightbox-thumb {
+    width: 72px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    opacity: 0.5;
+    cursor: pointer;
+    border: 2px solid transparent;
+    flex-shrink: 0;
+  }
+
+  .lightbox-thumb.active {
+    opacity: 1;
+    border-color: #ffffff;
+  }
+</style>
+
 </head>
 
 <body>
@@ -128,79 +340,78 @@ My design philosophy focuses on transforming ideas into memorable places that co
 Featured Projects
 </h2>
 
-<div class="project-grid">
-
-<div class="card">
-
-<h3>
-Roundabout of Jubail Commercial Port
-</h3>
-
-<p>
-Urban Design & Landmark Development
-</p>
-
+<div class="filter-bar" role="tablist" aria-label="Project categories">
+  <button type="button" class="filter-btn active" data-filter="all">All</button>
+  <button type="button" class="filter-btn" data-filter="urban">Urban Design</button>
+  <button type="button" class="filter-btn" data-filter="architecture">Architecture</button>
+  <button type="button" class="filter-btn" data-filter="interior">Interior Design</button>
 </div>
 
-<div class="card">
+<div class="project-grid" id="projectGrid">
 
-<h3>
-Jubail Port Gateway
-</h3>
+  <!-- 1. Roundabout of Jubail Commercial Port -->
+  <div class="card" data-category="urban" data-project-key="jubail-roundabout">
+    <div class="card-media">
+      <img src="Picture2.png" alt="Roundabout of Jubail Commercial Port">
+      <span class="photo-count-badge">5 Photos</span>
+    </div>
+    <span class="card-meta">Urban Design</span>
+    <h3>Roundabout of Jubail Commercial Port</h3>
+    <p>Urban Design &amp; Landmark Development</p>
+  </div>
 
-<p>
-Waterfront & Arrival Experience
-</p>
+  <!-- 2. Jubail Port Gateway -->
+  <div class="card" data-category="urban" data-project-key="port-gateway">
+    <div class="card-media">
+      <div class="card-placeholder">Gallery Coming Soon</div>
+    </div>
+    <span class="card-meta">Urban Design</span>
+    <h3>Jubail Port Gateway</h3>
+    <p>Waterfront &amp; Arrival Experience</p>
+  </div>
 
-</div>
+  <!-- 3. Al Khater Business Center -->
+  <div class="card" data-category="architecture" data-project-key="khater-center">
+    <div class="card-media">
+      <img src="Picture10.jpg" alt="Al Khater Business Center">
+      <span class="photo-count-badge">2 Photos</span>
+    </div>
+    <span class="card-meta">Architecture</span>
+    <h3>Al Khater Business Center</h3>
+    <p>Commercial Architecture</p>
+  </div>
 
-<div class="card">
+  <!-- 4. Luxury Residential Building (Dammam) -->
+  <div class="card" data-category="architecture" data-project-key="dammam-residential">
+    <div class="card-media">
+      <img src="Luminous Gulf Nighttime Architecture.png" alt="Luxury Residential Building - Dammam">
+      <span class="photo-count-badge">3 Photos</span>
+    </div>
+    <span class="card-meta">Architecture</span>
+    <h3>Luxury Residential Building</h3>
+    <p>Residential Architecture • Dammam</p>
+  </div>
 
-<h3>
-Al Khater Business Center
-</h3>
+  <!-- 5. Abdullah Al Barrak Headquarters -->
+  <div class="card" data-category="interior" data-project-key="barrak-hq">
+    <div class="card-media">
+      <img src="Picture13.jpg" alt="Abdullah Al Barrak Headquarters">
+      <span class="photo-count-badge">5 Photos</span>
+    </div>
+    <span class="card-meta">Interior Design</span>
+    <h3>Abdullah Al Barrak Headquarters</h3>
+    <p>Corporate Interior Design</p>
+  </div>
 
-<p>
-Commercial Architecture
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>
-Luxury Residential Building
-</h3>
-
-<p>
-Residential Architecture
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>
-Abdullah Al Barrak Headquarters
-</h3>
-
-<p>
-Corporate Interior Design
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>
-Turkey Interior Collection
-</h3>
-
-<p>
-Residential Interior Design
-</p>
-
-</div>
+  <!-- 6. Turkey Interior Collection -->
+  <div class="card" data-category="interior" data-project-key="turkey-interior">
+    <div class="card-media">
+      <div class="card-placeholder">Gallery Coming Soon</div>
+    </div>
+    <span class="card-meta">Interior Design</span>
+    <h3>Turkey Interior Collection</h3>
+    <p>Residential Interior Design</p>
+  </div>
 
 </div>
 
@@ -271,5 +482,9 @@ WhatsApp
 
 </section>
 
-</body>
-</html>
+<!-- Lightbox Gallery Modal -->
+<div class="lightbox-modal" id="lightboxModal" aria-hidden="true">
+  <div class="lightbox-content">
+    <div class="lightbox-header">
+      <div>
+        <h3 class="lightbox-title" id="lightbox
